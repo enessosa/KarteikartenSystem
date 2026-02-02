@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import core.enums.RecognitionLevel;
 import java.sql.SQLException;
 
+
 public class Karte {
     private final int id;
     private int deck_id;
