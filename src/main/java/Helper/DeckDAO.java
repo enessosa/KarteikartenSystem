@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import core.Deck;
 import core.Karte;
 import core.enums.MainMenuOptions;
-
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

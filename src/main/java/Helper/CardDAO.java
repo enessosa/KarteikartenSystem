@@ -3,11 +3,9 @@ package Helper;
 import com.google.common.collect.Lists;
 import core.Karte;
 import core.enums.RecognitionLevel;
-
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;

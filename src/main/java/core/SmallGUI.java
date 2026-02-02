@@ -1,9 +1,7 @@
 package core;
 
 import core.enums.MainMenuOptions;
-
 import static javax.swing.JOptionPane.*;
-
 import javax.swing.*;
 
 
