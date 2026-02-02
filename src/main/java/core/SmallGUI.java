@@ -15,6 +15,10 @@ public class SmallGUI {
 
     }
 
+    /**
+     * diese Methode wurde erstellt um die main-methode etwas reiner zu halten.
+     * @return die gewählte option
+     */
     public static MainMenuOptions mainmenu() {
 
         MainMenuOptions o1 = MainMenuOptions.values()[JOptionPane.showOptionDialog(

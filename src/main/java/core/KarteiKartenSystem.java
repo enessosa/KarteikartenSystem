@@ -4,24 +4,31 @@ import Helper.CardDAO;
 import Helper.DatabaseManager;
 import Helper.DeckDAO;
 import Helper.Stringhelper;
-import com.google.common.collect.Lists;
+// import com.google.common.collect.Lists;
 import core.enums.MainMenuOptions;
 import core.enums.RecognitionLevel;
-
 import javax.swing.*;
-import javax.xml.crypto.dsig.keyinfo.KeyName;
+// import javax.xml.crypto.dsig.keyinfo.KeyName;
 import java.util.List;
-
 import java.io.IOException;
 import java.sql.SQLException;
-
 import static javax.swing.JOptionPane.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+/**
+ * diese Klasse ist die Hauptdatei.
+ */
 public class KarteiKartenSystem {
     public static boolean running = true;
 
+
+    /**
+     * main datei.
+     * @param args args
+     * @throws IOException die aufzufangende exception
+     */
     public static void main(String[] args) throws IOException {
 
         try {

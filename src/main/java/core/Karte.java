@@ -2,13 +2,10 @@ package core;
 
 import Helper.CardDAO;
 import Helper.RecognitionLevelTranslator;
-
 import java.util.Collections;
 import java.util.List;
-
 import com.google.common.collect.Lists;
 import core.enums.RecognitionLevel;
-
 import java.sql.SQLException;
 
 public class Karte {
