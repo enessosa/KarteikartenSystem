@@ -1,10 +1,10 @@
-package Helper;
+package helper;
 
 import com.google.common.collect.Lists;
+import core.Deck;
 import core.Karte;
 import core.enums.RecognitionLevel;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -90,6 +90,22 @@ public class CardDAO {
             ps.setString(1, RecognitionLevelTranslator.toString(newLevel));
             ps.setInt(2, cardId);
             ps.executeUpdate();
+        }
+    }
+
+    public static void deleteCard(String vorderseite) throws SQLException {
+
+        String sql = """
+                DELETE FROM cards
+                WHERE vorderseite = ?;
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+
+            ps.setString(1, vorderseite);
+
+            ResultSet rs = ps.executeQuery();
+
         }
     }
 }

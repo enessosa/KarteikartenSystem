@@ -1,22 +1,19 @@
-package Helper;
+package helper;
 
-import com.google.common.collect.Lists;
 import core.Deck;
-import core.Karte;
-import core.enums.MainMenuOptions;
+
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.List;
-import static javax.swing.JOptionPane.*;
 
 public class DeckDAO {
 
     /**
      * mit dieser Methode soll die Datenbank erschaffen werden, die die einzelnen Decks dann beinhaltet.
+     *
      * @throws SQLException erkennt die abzufangende Abweichung.
      */
     public static void createDeckDB() throws SQLException {
@@ -61,14 +58,32 @@ public class DeckDAO {
 
             ResultSet rs = ps.executeQuery();
 
-            Deck deck = new Deck(
+            return new Deck(
                     rs.getString("name"),
                     rs.getInt("id"),
                     rs.getString("created_at")
             );
-            return deck;
         } catch (IOException e) {
             throw new RuntimeException(e);
+
+        }
+    }
+
+    public static void deleteDeck(String name) throws SQLException {
+
+        Deck d1 = findDeck(name);
+        int deckid = d1.getDeckid();
+
+        String sql = """
+                DELETE FROM decks
+                WHERE id = ?;
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+
+            ps.setInt(1, deckid);
+
+            ResultSet rs = ps.executeQuery();
 
         }
     }

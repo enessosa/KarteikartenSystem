@@ -1,29 +1,24 @@
 package core;
 
-import Helper.DeckDAO;
-import java.sql.Connection;
+import helper.DeckDAO;
 import java.sql.SQLException;
-// import java.time.LocalDate;
 import java.io.IOException;
-// import static javax.swing.JOptionPane.*;
 
 public class Deck {
 
-    private static final String URL = "jdbc:sqlite:karteikarten.db";
-    private static Connection connection;
-
-    private String deckName;
-    private int deck_id;
-    private String createdAt;
+    private final String deckName;
+    private final int deckid;
+    private final String createdAt;
 
 
     /**
      * ist der Konstruktor.
-     *
      * @param deckName ist der Name des Decks.
      * @throws IOException erkennt die abzufangende Abweichung.
+     * @param deckid deck id
+     * @param createdAt datum
      */
-    public Deck(String deckName, int deck_id, String createdAt) throws IOException {
+    public Deck(String deckName, int deckid, String createdAt) throws IOException {
 
         deckName = deckName
                 .replaceAll("[^a-z0-9_]", "_");
@@ -34,11 +29,16 @@ public class Deck {
         }
         this.deckName = deckName;
         this.createdAt = createdAt;
-        this.deck_id = deck_id;
+        this.deckid = deckid;
 
     }
 
-    public Deck(String deckName) throws IOException, SQLException {
+    /**
+     * Konstruktor.
+     * @param deckName der name
+     * @throws SQLException die exception
+     */
+    public Deck(String deckName) throws SQLException {
 
         deckName = deckName
                 .toLowerCase()
@@ -53,11 +53,13 @@ public class Deck {
         DeckDAO.insert(deckName);
 
         Deck vorrubergehendesDeck = DeckDAO.findDeck(deckName);
-        this.deck_id = vorrubergehendesDeck.deck_id;
+        this.deckid = vorrubergehendesDeck.deckid;
         this.createdAt = vorrubergehendesDeck.createdAt;
     }
 
-    public int getDeck_id() {
-        return deck_id;
+    public int getDeckid() {
+        return deckid;
     }
+
+
 }
