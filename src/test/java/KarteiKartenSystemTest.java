@@ -1,9 +1,11 @@
 import com.google.common.collect.Lists;
 import core.Karte;
 import core.enums.RecognitionLevel;
+import helper.CardDAO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +26,12 @@ public class KarteiKartenSystemTest {
         int i = Karte.getMaxListLength(k);
 
         Assertions.assertEquals(7, i, "stimmt nicht");
+    }
+
+    @Test
+    public void testeKartenFinder() throws SQLException {
+        int id = CardDAO.getCardId("Hola");
+        Assertions.assertEquals(1, id, "Hat nicht geklappt");
     }
 
 }

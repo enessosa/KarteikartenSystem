@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class Karte {
     private final int id;
     private final int deckid;
-    private final String vorderseite;
+    private String vorderseite;
     private final String rueckseite;
     private RecognitionLevel level;
 
@@ -70,6 +70,11 @@ public class Karte {
     public void setRecognitionLevel(RecognitionLevel r) throws SQLException {
         this.level = r;
         CardDAO.updateRecognitionLevel(this.id, r);
+    }
+
+    public void setVorderseite(String s) {
+        this.vorderseite = s;
+
     }
 
     /**

@@ -1,7 +1,9 @@
 package core;
 
 import core.enums.MainMenuOptions;
+
 import static javax.swing.JOptionPane.*;
+
 import javax.swing.*;
 
 
@@ -15,20 +17,27 @@ public class SmallGUI {
 
     /**
      * diese Methode wurde erstellt um die main-methode etwas reiner zu halten.
+     *
      * @return die gewählte option
      */
-    public static MainMenuOptions mainmenu() {
+    public static MainMenuOptions mainmenu() throws ArrayIndexOutOfBoundsException {
 
-        MainMenuOptions o1 = MainMenuOptions.values()[JOptionPane.showOptionDialog(
+        int result = JOptionPane.showOptionDialog(
                 null,
                 "Was wollen Sie machen?",
                 "Karteikarten",
-                DEFAULT_OPTION,
-                QUESTION_MESSAGE,
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
                 null,
                 MainMenuOptions.values(),
-                MainMenuOptions.values()[0])];
+                MainMenuOptions.values()[0]
+        );
 
-        return o1;
+        if (result == JOptionPane.CLOSED_OPTION) {
+            return null;
+        }
+
+        return MainMenuOptions.values()[result];
+
     }
 }
