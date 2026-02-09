@@ -7,8 +7,8 @@ import core.enums.MainMenuOptions;
 import core.enums.RecognitionLevel;
 import core.enums.VerwaltungOptions;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
+import java.io.IOException;
 import java.util.List;
 //import java.io.IOException;
 import java.sql.SQLException;
@@ -40,34 +40,13 @@ public class KarteiKartenSystem {
             CardDAO.createCardDB();
 
             while (running) {
-                MainMenuOptions o = SmallGUI.mainmenu();
+                MainMenuOptions o = Options.mainmenu();
                 if (o == MainMenuOptions.ERSTELLEKARTE) {
                     erstelleKarte();
                 } else if (o == MainMenuOptions.VERWALTE) {
                     verwalte();
                 } else if (o == MainMenuOptions.FRAGEAB) {
-                    // deckid finden anhand deck namen
-                    String deckname = showInputDialog("Wie heist das gesuchte Deck?");
-                    boolean weiter = true;
-                    while (weiter) {
-
-                        Deck deck = DeckDAO.findDeck(deckname);
-                        int deckid = deck.getDeckid();
-                        List<Karte> karten = CardDAO.findByDeckId(deckid);
-                        for (Karte k : karten) {
-
-                            showMessageDialog(null, k.getVorderseite());
-                            showMessageDialog(null, k.getRueckseite());
-
-                            RecognitionLevel r = Options.getOptionForRecognitionLevel();
-
-                            k.setRecognitionLevel(r);
-                        }
-                        int result = Options.getContinuationDecision();
-                        weiter = (result == YES_OPTION);
-                    }
-
-
+                    frageAb();
                 } else if (o == MainMenuOptions.ERSTELLEDECK) {
                     boolean weiter = true;
                     while (weiter) {
@@ -84,7 +63,7 @@ public class KarteiKartenSystem {
                 }
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
 //            e.printStackTrace();
         } finally {
             try {
@@ -123,7 +102,7 @@ public class KarteiKartenSystem {
         }
     }
 
-    public static void verwalte() throws SQLException, NullPointerException {
+    public static void verwalte() throws SQLException, NullPointerException, IOException {
         VerwaltungOptions o1 = Options.getVerwaltungsOption();
         if (o1 == VerwaltungOptions.SIEHEDECK) {
             CardDAO.showCards();
@@ -136,11 +115,34 @@ public class KarteiKartenSystem {
             ChangeableCardInfos o2 = Options.getOptionForChange();
             String s = showInputDialog("Was ist der neue Wert?");
             assert o2 != null;
-            CardDAO.update(o2.toString(), id, s);
+            CardDAO.update(ChangeableCardInfosTranslator.toString(o2), id, s);
         } else if (o1 == VerwaltungOptions.LOESCHEKARTE) {
             String vorderseite = showInputDialog(
                     "Was ist die Vorderseite von der Karte, die Sie löschen wollen?");
             CardDAO.deleteCard(vorderseite);
+        } else if (o1 == VerwaltungOptions.SIEHEALLEDECKS) {
+            List<Deck> decks = DeckDAO.getAllDecks();
+            DeckDAO.showDecks(decks);
+
+        }
+    }
+
+    public static void frageAb() throws SQLException {
+        // deckid finden anhand deck namen
+        String deckname = showInputDialog("Wie heist das gesuchte Deck?");
+        boolean weiter = true;
+        while (weiter) {
+            Deck deck = DeckDAO.findDeck(deckname);
+            int deckid = deck.getDeckid();
+            List<Karte> karten = CardDAO.findByDeckId(deckid);
+            for (Karte k : karten) {
+                showMessageDialog(null, k.getVorderseite());
+                showMessageDialog(null, k.getRueckseite());
+                RecognitionLevel r = Options.getOptionForRecognitionLevel();
+                k.setRecognitionLevel(r);
+            }
+            int result = Options.getContinuationDecision();
+            weiter = (result == YES_OPTION);
         }
     }
 }

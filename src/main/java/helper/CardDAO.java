@@ -5,7 +5,6 @@ import core.Deck;
 import core.Karte;
 import core.enums.RecognitionLevel;
 
-import javax.smartcardio.Card;
 import java.sql.ResultSet;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -25,7 +24,7 @@ public class CardDAO {
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         vorderseite TEXT NOT NULL,
                         rueckseite TEXT NOT NULL,
-                        reckognitionlevel TEXT NOT NULL,
+                        recognitionlevel TEXT NOT NULL,
                     
                         FOREIGN KEY (deck_id) REFERENCES decks(id)
                     );
@@ -39,7 +38,7 @@ public class CardDAO {
 
     public static void insert(int deckid, String vorderseite, String rueckseite, RecognitionLevel recognitionLevel) throws SQLException {
 
-        String sql = "INSERT INTO cards (deck_id, vorderseite, rueckseite, reckognitionlevel) VALUES (?, ?, ?, ?);";
+        String sql = "INSERT INTO cards (deck_id, vorderseite, rueckseite, recognitionlevel) VALUES (?, ?, ?, ?);";
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
 
@@ -56,7 +55,7 @@ public class CardDAO {
         List<Karte> cards = Lists.newArrayList();
 
         String sql = """
-                SELECT id, deck_id, vorderseite, rueckseite, reckognitionlevel
+                SELECT id, deck_id, vorderseite, rueckseite, recognitionlevel
                 FROM cards
                 WHERE deck_id = ?
                 """;
@@ -73,7 +72,7 @@ public class CardDAO {
                         rs.getInt("deck_id"),
                         rs.getString("vorderseite"),
                         rs.getString("rueckseite"),
-                        RecognitionLevelTranslator.toEnum(rs.getString("reckognitionlevel")));
+                        RecognitionLevelTranslator.toEnum(rs.getString("recognitionlevel")));
                 cards.add(card);
             }
         }
@@ -81,12 +80,11 @@ public class CardDAO {
         return cards;
     }
 
-    public static void updateRecognitionLevel(int cardId, RecognitionLevel newLevel)
-            throws SQLException {
+    public static void updateRecognitionLevel(int cardId, RecognitionLevel newLevel) throws SQLException {
 
         String sql = """
                 UPDATE cards
-                SET reckognitionlevel = ?
+                SET recognitionlevel = ?
                 WHERE id = ?
                 """;
 
@@ -98,19 +96,17 @@ public class CardDAO {
         }
     }
 
-    public static void update(String toUpdate, int cardId, String newThing) throws SQLException {
+    public static void update(String toUpdate, int cardId, String newValue) throws SQLException {
 
-        String sql = """
-                UPDATE cards
-                SET ? = ?
-                Where id = ?
-                """;
+        if (!toUpdate.equals("vorderseite") && !toUpdate.equals("rueckseite")) {
+            throw new IllegalArgumentException("Ungültige Spalte: " + toUpdate);
+        }
+
+        String sql = "UPDATE cards SET " + toUpdate + " = ? WHERE id = ?";
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
-
-            ps.setString(1, toUpdate);
-            ps.setString(2, newThing);
-            ps.setInt(3, cardId);
+            ps.setString(1, newValue);
+            ps.setInt(2, cardId);
             ps.executeUpdate();
         }
     }
@@ -143,9 +139,22 @@ public class CardDAO {
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
 
             ps.setString(1, vorderseite);
+            ps.executeUpdate();
 
-            ResultSet rs = ps.executeQuery();
+        }
+    }
 
+    public static void deleteCardByDeckId(int deckId) throws SQLException {
+
+        String sql = """
+                DELETE FROM cards
+                WHERE deck_id = ?;
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+
+            ps.setInt(1, deckId);
+            ps.executeUpdate();
         }
     }
 
@@ -164,7 +173,6 @@ public class CardDAO {
 
             return rs.getInt("id");
         }
-
 
 
     }

@@ -33,6 +33,8 @@ public class Options {
     }
 
     public static RecognitionLevel getOptionForRecognitionLevel() {
+        String[] s = {};
+
         int i = JOptionPane.showOptionDialog(
                 null,
                 "Wie schwer war es?",
@@ -74,5 +76,27 @@ public class Options {
                 null,
                 VerwaltungOptions.values(),
                 VerwaltungOptions.values()[0])];
+    }
+
+
+    public static MainMenuOptions mainmenu() throws ArrayIndexOutOfBoundsException {
+
+        int result = JOptionPane.showOptionDialog(
+                null,
+                "Was wollen Sie machen?",
+                "Karteikarten",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                MainMenuOptions.values(),
+                MainMenuOptions.values()[0]
+        );
+
+        if (result == JOptionPane.CLOSED_OPTION) {
+            return null;
+        }
+
+        return MainMenuOptions.values()[result];
+
     }
 }

@@ -1,0 +1,5 @@
+Das gesamte Fenster wird in JavaFX als Stage bezeichnet.
+Der Inhalt eines Fensters wird Scene genannt.
+der Hauptbildschirm wird PrimaryStage genannt.
+
+zum ausführen in terminal  mvn javafx:run eingeben.

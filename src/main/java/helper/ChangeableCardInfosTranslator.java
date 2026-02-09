@@ -10,7 +10,7 @@ public class ChangeableCardInfosTranslator {
         } else if (cardInfo == ChangeableCardInfos.RUECKSEITE) {
             return "rueckseite";
         } else {
-            return "reckognitionlevel";
+            return "recognitionlevel";
         }
     }
 

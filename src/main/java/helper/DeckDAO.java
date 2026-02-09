@@ -1,13 +1,16 @@
 package helper;
 
+import com.google.common.collect.Lists;
 import core.Deck;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.List;
 
 public class DeckDAO {
 
@@ -30,6 +33,32 @@ public class DeckDAO {
                 stmt.execute(sql);
             }
         }
+    }
+
+    public static List<Deck> getAllDecks() throws SQLException, IOException {
+        List<Deck> decks = Lists.newArrayList();
+
+        String sql = """
+                SELECT id, name, created_at
+                FROM decks
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Deck deck = new Deck(
+                        rs.getString("name"),
+                        rs.getInt("id"),
+                        rs.getString("created_at"));
+
+                decks.add(deck);
+            }
+        }
+
+        return decks;
+
     }
 
     public static void insert(String name) throws SQLException {
@@ -82,9 +111,28 @@ public class DeckDAO {
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
 
             ps.setInt(1, deckid);
-
-            ResultSet rs = ps.executeQuery();
+            ps.executeUpdate();
 
         }
+
+        CardDAO.deleteCardByDeckId(deckid);
     }
+
+    public static void showDecks(List<Deck> decks) throws SQLException {
+        StringBuilder s = new StringBuilder();
+        for (Deck d : decks) {
+            s.append(d.getDeckid());
+            s.append(", ");
+            s.append(d.getDeckName());
+            s.append(", ");
+            s.append(d.getCreatedAt());
+            s.append("\n");
+            s.append("Karten: ");
+            s.append(d.calculateCardCount());
+            s.append("\n");
+        }
+        JOptionPane.showMessageDialog(null, s.toString());
+    }
+
+
 }

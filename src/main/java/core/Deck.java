@@ -1,22 +1,27 @@
 package core;
 
+import helper.CardDAO;
 import helper.DeckDAO;
+
 import java.sql.SQLException;
 import java.io.IOException;
+import java.util.List;
 
 public class Deck {
 
     private final String deckName;
     private final int deckid;
     private final String createdAt;
+    private int cardCount;
 
 
     /**
      * ist der Konstruktor.
-     * @param deckName ist der Name des Decks.
-     * @throws IOException erkennt die abzufangende Abweichung.
-     * @param deckid deck id
+     *
+     * @param deckName  ist der Name des Decks.
+     * @param deckid    deck id
      * @param createdAt datum
+     * @throws IOException erkennt die abzufangende Abweichung.
      */
     public Deck(String deckName, int deckid, String createdAt) throws IOException {
 
@@ -33,8 +38,13 @@ public class Deck {
 
     }
 
+    public void setCardCount(int cardCount) {
+        this.cardCount = cardCount;
+    }
+
     /**
      * Konstruktor.
+     *
      * @param deckName der name
      * @throws SQLException die exception
      */
@@ -61,5 +71,20 @@ public class Deck {
         return deckid;
     }
 
+    public String getDeckName() {
+        return deckName;
+    }
 
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public int getCardCount() {
+        return cardCount;
+    }
+
+    public int calculateCardCount() throws SQLException {
+        List<Karte> cards = CardDAO.findByDeckId(this.deckid);
+        return cards.size();
+    }
 }
