@@ -1,47 +1,50 @@
 package gui;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.net.URL;
 
 public class GUI extends Application {
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-
-    // diese Methode ist sogesehen die Main-Methode.
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("KarteikartenSystem");
 
-        // button.setOnAction(e -> );
-        Button buttonFrageAb = new Button();
-        buttonFrageAb.setText("Abfragen");
+        String path = "/design.fxml";
 
-        Button buttonErstelleDeck = new Button();
-        buttonErstelleDeck.setText("Verwalte");
+        URL fxmlUrl = GUI.class.getResource(path);
+        System.out.println("Trying to load FXML from: " + path);
+        System.out.println("Resolved URL: " + fxmlUrl);
 
+        if (fxmlUrl == null) {
+            throw new RuntimeException("FXML nicht gefunden: " + path +
+                    "\nLiegt die Datei unter src/main/resources ?");
+        }
 
-        StackPane layout = new StackPane();
-        layout.getChildren().add(buttonFrageAb);
-        StackPane.setAlignment(buttonFrageAb, Pos.BOTTOM_CENTER);
-        StackPane.setMargin(buttonFrageAb, new Insets(30, 30, 30, 30));
+        Parent root = FXMLLoader.load(fxmlUrl);
 
-        Scene scene = new Scene(layout, 600, 400);
+        // ✅ Scene zuerst erstellen
+        Scene scene = new Scene(root);
+
+        // ✅ Dark CSS laden
+        URL cssUrl = GUI.class.getResource("/dark.css");
+        System.out.println("Resolved CSS URL: " + cssUrl);
+
+        if (cssUrl != null) {
+            scene.getStylesheets().add(cssUrl.toExternalForm());
+        } else {
+            System.out.println("dark.css NICHT gefunden!");
+        }
+
         primaryStage.setScene(scene);
-        scene.getStylesheets().add("style.css");
-
         primaryStage.show();
     }
 
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

@@ -2,6 +2,7 @@ package helper;
 
 import com.google.common.collect.Lists;
 import core.Deck;
+import core.Karte;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -98,6 +99,24 @@ public class DeckDAO {
         }
     }
 
+    public static String getDeckName(int deckid) throws SQLException {
+
+        String sql = """
+                SELECT name
+                FROM decks
+                WHERE id = ?
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+
+            ps.setInt(1, deckid);
+
+            ResultSet rs = ps.executeQuery();
+
+            return rs.getString("name");
+        }
+    }
+
     public static void deleteDeck(String name) throws SQLException {
 
         Deck d1 = findDeck(name);
@@ -132,6 +151,24 @@ public class DeckDAO {
             s.append("\n");
         }
         JOptionPane.showMessageDialog(null, s.toString());
+    }
+
+    public static List<String> getAllDeckNames() throws SQLException {
+
+        List<String> deckNames = Lists.newArrayList();
+
+        String sql = "SELECT name FROM decks";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                deckNames.add(rs.getString("name"));
+            }
+        }
+
+        return deckNames;
     }
 
 

@@ -1,6 +1,7 @@
 package core;
 
 import helper.CardDAO;
+import helper.DeckDAO;
 import helper.RecognitionLevelTranslator;
 import java.util.Collections;
 import java.util.List;
@@ -58,8 +59,12 @@ public class Karte {
         return rueckseite;
     }
 
-    public String getRecognitionLevel() {
+    public String getLevel() {
         return RecognitionLevelTranslator.toString(level);
+    }
+
+    public String getDeck() throws SQLException {
+        return DeckDAO.getDeckName(deckid);
     }
 
     /**

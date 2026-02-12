@@ -80,6 +80,33 @@ public class CardDAO {
         return cards;
     }
 
+    public static List<Karte> findAllCards() throws SQLException {
+
+        List<Karte> cards = Lists.newArrayList();
+
+        String sql = """
+                SELECT id, deck_id, vorderseite, rueckseite, recognitionlevel
+                FROM cards
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Karte card = new Karte(
+                        rs.getInt("id"),
+                        rs.getInt("deck_id"),
+                        rs.getString("vorderseite"),
+                        rs.getString("rueckseite"),
+                        RecognitionLevelTranslator.toEnum(rs.getString("recognitionlevel")));
+                cards.add(card);
+            }
+        }
+        return cards;
+    }
+
+
     public static void updateRecognitionLevel(int cardId, RecognitionLevel newLevel) throws SQLException {
 
         String sql = """
@@ -192,7 +219,7 @@ public class CardDAO {
                 s.append(",");
                 s.append(Stringhelper.lengthCorrector(max, k.getRueckseite()));
                 s.append(",");
-                s.append(Stringhelper.lengthCorrector(max, k.getRecognitionLevel()));
+                s.append(Stringhelper.lengthCorrector(max, k.getLevel()));
                 s.append("\n");
             }
             showMessageDialog(null, s.toString());
