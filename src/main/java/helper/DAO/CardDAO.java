@@ -1,18 +1,17 @@
-package helper;
+package helper.DAO;
 
 import com.google.common.collect.Lists;
 import core.Deck;
 import core.Karte;
 import core.enums.RecognitionLevel;
+import helper.DatabaseManager;
+import helper.RecognitionLevelTranslator;
 
 import java.sql.ResultSet;
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import static javax.swing.JOptionPane.showInputDialog;
-import static javax.swing.JOptionPane.showMessageDialog;
 
 public class CardDAO {
 
@@ -202,29 +201,5 @@ public class CardDAO {
         }
 
 
-    }
-
-    public static void showCards() throws SQLException {
-        String deckname = showInputDialog("Wie heist das gesuchte Deck?");
-        try {
-            Deck d1 = DeckDAO.findDeck(deckname);
-            List<Karte> cards = CardDAO.findByDeckId(d1.getDeckid());
-            StringBuilder s = new StringBuilder();
-            int max = Karte.getMaxListLength(cards);
-            // verbessern hier wird das nicht korrigert
-            for (Karte k : cards) {
-                s.append(Stringhelper.lengthCorrector(max, "" + k.getId()));
-                s.append(",");
-                s.append(Stringhelper.lengthCorrector(max, k.getVorderseite()));
-                s.append(",");
-                s.append(Stringhelper.lengthCorrector(max, k.getRueckseite()));
-                s.append(",");
-                s.append(Stringhelper.lengthCorrector(max, k.getLevel()));
-                s.append("\n");
-            }
-            showMessageDialog(null, s.toString());
-        } catch (SQLException e) {
-            showMessageDialog(null, "Irgendwas ist schiefgegangen...");
-        }
     }
 }

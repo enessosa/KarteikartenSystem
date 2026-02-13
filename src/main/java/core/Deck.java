@@ -1,7 +1,7 @@
 package core;
 
-import helper.CardDAO;
-import helper.DeckDAO;
+import helper.DAO.CardDAO;
+import helper.DAO.DeckDAO;
 
 import java.sql.SQLException;
 import java.io.IOException;
@@ -12,7 +12,6 @@ public class Deck {
     private final String deckName;
     private final int deckid;
     private final String createdAt;
-    private int cardCount;
 
 
     /**
@@ -36,10 +35,6 @@ public class Deck {
         this.createdAt = createdAt;
         this.deckid = deckid;
 
-    }
-
-    public void setCardCount(int cardCount) {
-        this.cardCount = cardCount;
     }
 
     /**
@@ -77,10 +72,6 @@ public class Deck {
 
     public String getCreatedAt() {
         return createdAt;
-    }
-
-    public int getCardCount() {
-        return cardCount;
     }
 
     public int calculateCardCount() throws SQLException {

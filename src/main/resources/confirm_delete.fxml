@@ -12,7 +12,7 @@
       prefHeight="180"
       xmlns="http://javafx.com/javafx/24"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gui.ConfirmDeleteController"
+      fx:controller="gui.controller.ConfirmDeleteController"
       style="-fx-background-color: #1e1e1e;">
 
     <padding>

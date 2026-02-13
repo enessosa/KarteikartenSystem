@@ -29,7 +29,7 @@
             styleClass="root-dark"
             xmlns="http://javafx.com/javafx/24"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.MainController">
+            fx:controller="gui.controller.MainController">
 
     <children>
 
@@ -37,23 +37,18 @@
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
             <top>
-                <MenuBar maxHeight="-Infinity" prefHeight="28.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
-                    <menus>
-                        <Menu mnemonicParsing="false" text="Edit">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Deck erstellen" onAction="#onCreateDeck"/>
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Help">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="About" onAction="#onAbout"/>
-                            </items>
-                        </Menu>
-                    </menus>
-                    <BorderPane.margin>
-                        <Insets />
-                    </BorderPane.margin>
-                </MenuBar>
+<!--                <MenuBar maxHeight="-Infinity" prefHeight="28.0" prefWidth="1100.0" BorderPane.alignment="CENTER">-->
+<!--                    <menus>-->
+<!--                        <Menu mnemonicParsing="false" text="Edit">-->
+<!--                            <items>-->
+<!--                                <MenuItem mnemonicParsing="false" text="Deck erstellen" onAction="#onCreateDeck"/>-->
+<!--                            </items>-->
+<!--                        </Menu>-->
+<!--                    </menus>-->
+<!--                    <BorderPane.margin>-->
+<!--                        <Insets />-->
+<!--                    </BorderPane.margin>-->
+<!--                </MenuBar>-->
             </top>
 
             <left>
@@ -71,7 +66,6 @@
                                                 <VBox spacing="8.0"
                                                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0"
                                                       AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                                    <TextField fx:id="deckSearchField" promptText="Deck suchen…" onKeyReleased="#onDeckSearch"/>
                                                     <ListView fx:id="deckListView" prefHeight="170.0" />
                                                     <HBox spacing="8.0">
                                                         <Button mnemonicParsing="false" text="Neu" onAction="#onCreateDeck"/>
@@ -174,8 +168,6 @@
                                     <TableColumn fx:id="colLevel" prefWidth="120.0" text="Level"/>
                                 </columns>
                             </TableView>
-
-                            <Label fx:id="statusLabel" text="Bereit." />
 
                         </VBox>
 

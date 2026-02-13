@@ -16,7 +16,7 @@
             stylesheets="@dark.css"
             xmlns="http://javafx.com/javafx/24"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.QuizController">
+            fx:controller="gui.controller.QuizController">
 
     <children>
 

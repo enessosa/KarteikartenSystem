@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
 
-    private static final String URL = "jdbc:sqlite:karteikarten.db";
+    private static final String URL = DbPaths.sqliteUrl("KarteikartenSystem", "karteikarten.db");
     private static Connection connection;
 
     public static Connection getConnection() throws SQLException {

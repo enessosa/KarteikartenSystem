@@ -1,8 +1,8 @@
 package gui;
 
-import helper.CardDAO;
+import helper.DAO.CardDAO;
 import helper.DatabaseManager;
-import helper.DeckDAO;
+import helper.DAO.DeckDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,10 +31,8 @@ public class GUI extends Application {
 
         Parent root = FXMLLoader.load(fxmlUrl);
 
-        // ✅ Scene zuerst erstellen
         Scene scene = new Scene(root);
 
-        // ✅ Dark CSS laden
         URL cssUrl = GUI.class.getResource("/dark.css");
         System.out.println("Resolved CSS URL: " + cssUrl);
 

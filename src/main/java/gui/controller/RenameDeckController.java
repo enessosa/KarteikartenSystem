@@ -1,13 +1,10 @@
-package gui;
+package gui.controller;
 
-import helper.DeckDAO;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.sql.SQLException;
 
 public class RenameDeckController {
 

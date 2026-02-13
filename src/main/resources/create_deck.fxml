@@ -11,7 +11,7 @@
       prefWidth="420" prefHeight="180"
       xmlns="http://javafx.com/javafx/24"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gui.CreateDeckController"
+      fx:controller="gui.controller.CreateDeckController"
       styleClass="root-dark">
 
     <padding>

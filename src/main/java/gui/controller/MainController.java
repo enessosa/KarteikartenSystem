@@ -1,11 +1,10 @@
-package gui;
+package gui.controller;
 
-import com.google.common.collect.Lists;
 import core.Deck;
-import core.KKSYSGui;
 import core.Karte;
-import helper.CardDAO;
-import helper.DeckDAO;
+import core.enums.RecognitionLevel;
+import helper.DAO.CardDAO;
+import helper.DAO.DeckDAO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,13 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class MainController {
 
@@ -103,20 +101,12 @@ public class MainController {
         String rueckseite = newBackArea.getText();
         String deckname = chooseDeck.getValue().toString();
 
-        KKSYSGui.erstelleKarte(vorderseite, rueckseite, deckname);
+        erstelleKarte(vorderseite, rueckseite, deckname);
 
         newFrontArea.clear();
         newBackArea.clear();
 
         onRefreshCards();
-    }
-
-    @FXML
-    private void onExit() {
-    }
-
-    @FXML
-    private void onAbout() {
     }
 
     @FXML
@@ -240,10 +230,6 @@ public class MainController {
     }
 
     @FXML
-    private void onDeckSearch() {
-    }
-
-    @FXML
     private void onCardSearch() throws SQLException {
 
         List<Karte> allCards = CardDAO.findAllCards();
@@ -310,34 +296,6 @@ public class MainController {
     }
 
     @FXML
-    private void onNextCard() {
-    }
-
-    @FXML
-    private void onRevealAnswer() {
-    }
-
-    @FXML
-    private void onRateBad() {
-    }
-
-    @FXML
-    private void onRateOkay() {
-    }
-
-    @FXML
-    private void onRateGood() {
-    }
-
-    @FXML
-    private void onClearNewCard() {
-    }
-
-    @FXML
-    private void onSave() {
-    }
-
-    @FXML
     public void onRefreshCards() throws SQLException {
         cardsTable.getItems().clear();
         cardsTable.getItems().addAll(CardDAO.findAllCards());
@@ -357,7 +315,9 @@ public class MainController {
 
             Scene scene = new Scene(root);
             var cssUrl = getClass().getResource("/dark.css");
-            if (cssUrl != null) scene.getStylesheets().add(cssUrl.toExternalForm());
+            if (cssUrl != null) {
+                scene.getStylesheets().add(cssUrl.toExternalForm());
+            }
 
             Stage stage = new Stage();
             stage.setTitle("Karte bearbeiten");
@@ -394,7 +354,6 @@ public class MainController {
         onRefreshCards();
     }
 
-
     private void prepareCardTable() throws SQLException {
         List<Karte> cards = CardDAO.findAllCards();
 
@@ -414,6 +373,19 @@ public class MainController {
         box.getItems().clear();
         List<String> deckNames = DeckDAO.getAllDeckNames();
         box.getItems().addAll(deckNames);
+
+    }
+
+    public static void erstelleKarte(String vorderseite, String rueckseite, String deckname) throws SQLException {
+        try {
+            int i = DeckDAO.findDeck(deckname).getDeckid();
+        } catch (NullPointerException e) {
+            showMessageDialog(null, "Dieses Deck gibt es nicht.");
+            return;
+        }
+
+        CardDAO.insert(
+                DeckDAO.findDeck(deckname).getDeckid(), vorderseite, rueckseite, RecognitionLevel.BAD);
 
     }
 }

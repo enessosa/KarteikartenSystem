@@ -13,7 +13,7 @@
       prefWidth="520" prefHeight="420"
       xmlns="http://javafx.com/javafx/24"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gui.EditCardController"
+      fx:controller="gui.controller.EditCardController"
       styleClass="root-dark">
 
     <padding>

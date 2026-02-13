@@ -1,10 +1,10 @@
-package gui;
+package gui.controller;
 
 import core.Deck;
 import core.Karte;
 import core.enums.RecognitionLevel;
-import helper.CardDAO;
-import helper.DeckDAO;
+import helper.DAO.CardDAO;
+import helper.DAO.DeckDAO;
 import helper.RecognitionLevelTranslator;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

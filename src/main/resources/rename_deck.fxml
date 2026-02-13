@@ -13,7 +13,7 @@
       alignment="CENTER"
       xmlns="http://javafx.com/javafx/24"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="gui.RenameDeckController"
+      fx:controller="gui.controller.RenameDeckController"
       styleClass="root-dark">
 
     <padding>

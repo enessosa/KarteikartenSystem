@@ -1,8 +1,8 @@
-package helper;
+package helper.DAO;
 
 import com.google.common.collect.Lists;
 import core.Deck;
-import core.Karte;
+import helper.DatabaseManager;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -135,22 +135,6 @@ public class DeckDAO {
         }
 
         CardDAO.deleteCardByDeckId(deckid);
-    }
-
-    public static void showDecks(List<Deck> decks) throws SQLException {
-        StringBuilder s = new StringBuilder();
-        for (Deck d : decks) {
-            s.append(d.getDeckid());
-            s.append(", ");
-            s.append(d.getDeckName());
-            s.append(", ");
-            s.append(d.getCreatedAt());
-            s.append("\n");
-            s.append("Karten: ");
-            s.append(d.calculateCardCount());
-            s.append("\n");
-        }
-        JOptionPane.showMessageDialog(null, s.toString());
     }
 
     public static List<String> getAllDeckNames() throws SQLException {

@@ -1,6 +1,5 @@
-package gui;
+package gui.controller;
 
-import com.sun.tools.javac.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;

@@ -1,19 +1,22 @@
-package gui;
+package gui.controller;
 
+import com.google.common.collect.Lists;
 import core.Deck;
 import core.Karte;
+import helper.RecognitionLevelTranslator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import helper.CardDAO;
+import helper.DAO.CardDAO;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import core.enums.RecognitionLevel;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 public class QuizController {
@@ -56,7 +59,7 @@ public class QuizController {
      */
     public void startQuizForDeck(Deck deck) throws SQLException {
         this.deck = deck;
-        this.cards = CardDAO.findByDeckId(deck.getDeckid());
+        this.cards = sortCards(CardDAO.findByDeckId(deck.getDeckid()));
         this.index = 0;
         this.showingBack = false;
 
@@ -122,13 +125,12 @@ public class QuizController {
 
     private void updateProgress() {
         int total = cards.size();
-        int current = index + 1; // 1-basiert für Anzeige
+        int current = index + 1;
         int remaining = total - index;
 
         infoLabel.setText(current + " / " + total);
         progressTextLabel.setText(remaining + " übrig");
 
-        // Fortschritt: bereits erledigt (index) / total
         progressBar.setProgress((double) index / total);
     }
 
@@ -163,9 +165,7 @@ public class QuizController {
 
         Karte k = currentCard();
 
-        // Wichtig: updateRecognitionLevel muss wissen WELCHE Karte.
-        // Also idealerweise mit cardId:
-        CardDAO.updateRecognitionLevel(k.getId(), level); // <- an dein DAO anpassen
+        CardDAO.updateRecognitionLevel(k.getId(), level);
 
         nextCard();
     }
@@ -174,5 +174,47 @@ public class QuizController {
     private void onClose(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    public List<Karte> sortCards(List<Karte> cards) {
+        List<Karte> result1 = Lists.newArrayList();
+        List<Karte> result2 = Lists.newArrayList();
+        List<Karte> result3 = Lists.newArrayList();
+        List<Karte> result4 = Lists.newArrayList();
+        List<Karte> finalResult = Lists.newArrayList();
+
+        for (Karte k : cards) {
+            if (RecognitionLevelTranslator.toEnum(k.getLevel()).equals(RecognitionLevel.BAD)) {
+                result1.add(k);
+            }
+        }
+        Collections.shuffle(result1);
+
+        for (Karte k : cards) {
+            if (RecognitionLevelTranslator.toEnum(k.getLevel()).equals(RecognitionLevel.OK)) {
+                result2.add(k);
+            }
+        }
+        Collections.shuffle(result2);
+
+        for (Karte k : cards) {
+            if (RecognitionLevelTranslator.toEnum(k.getLevel()).equals(RecognitionLevel.GOOD)) {
+                result3.add(k);
+            }
+        }
+        Collections.shuffle(result3);
+
+        for (Karte k : cards) {
+            if (RecognitionLevelTranslator.toEnum(k.getLevel()).equals(RecognitionLevel.EXCELLENT)) {
+                result4.add(k);
+            }
+        }
+        Collections.shuffle(result4);
+
+        finalResult.addAll(result1);
+        finalResult.addAll(result2);
+        finalResult.addAll(result3);
+        finalResult.addAll(result4);
+        return finalResult;
     }
 }
