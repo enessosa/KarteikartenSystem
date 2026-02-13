@@ -171,5 +171,22 @@ public class DeckDAO {
         return deckNames;
     }
 
+    public static void renameDeck(int deckid, String newName) {
+
+        String sql = """
+                UPDATE decks
+                SET name = ?
+                WHERE id = ?
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, newName);
+            ps.setInt(2, deckid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 }

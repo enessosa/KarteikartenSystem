@@ -39,16 +39,9 @@
             <top>
                 <MenuBar maxHeight="-Infinity" prefHeight="28.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
                     <menus>
-                        <Menu mnemonicParsing="false" text="File">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Speichern" onAction="#onSave"/>
-                                <MenuItem mnemonicParsing="false" text="Beenden" onAction="#onExit"/>
-                            </items>
-                        </Menu>
                         <Menu mnemonicParsing="false" text="Edit">
                             <items>
                                 <MenuItem mnemonicParsing="false" text="Deck erstellen" onAction="#onCreateDeck"/>
-                                <MenuItem mnemonicParsing="false" text="Deck löschen" onAction="#onDeleteDeck"/>
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">

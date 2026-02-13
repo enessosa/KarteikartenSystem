@@ -107,7 +107,6 @@ public class MainController {
 
         newFrontArea.clear();
         newBackArea.clear();
-        chooseDeck.getSelectionModel().clearSelection();
 
         onRefreshCards();
     }
@@ -162,6 +161,58 @@ public class MainController {
 
     @FXML
     private void onRenameDeck() {
+        String selectedDeckName = deckListView.getSelectionModel().getSelectedItem().toString();
+
+        if (selectedDeckName == null) {
+            System.out.println("Kein Deck ausgewählt!");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/rename_deck.fxml"));
+            Parent root = loader.load();
+
+            RenameDeckController controller = loader.getController();
+            controller.setCurrentName(selectedDeckName);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+
+            scene.getStylesheets().add(
+                    getClass().getResource("/dark.css").toExternalForm()
+            );
+
+            stage.setScene(scene);
+            stage.setTitle("Deck umbenennen");
+            stage.setResizable(false);
+
+            stage.setOnHidden(event -> {
+                if (controller.isRenamed()) {
+                    String newName = controller.getNewName();
+
+                    try {
+                        DeckDAO.renameDeck(DeckDAO.findDeck(selectedDeckName).getDeckid(), newName);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    try {
+                        onRefreshCards();
+                        refreshDeckChoice(chooseDeck);
+                        refreshDeckChoice(chooseDeckForQuiz);
+                        deckListView.getItems().clear();
+                        prepareDeckListView();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -244,8 +295,15 @@ public class MainController {
             QuizController quizController = loader.getController();
             quizController.startQuizForDeck(deck);
 
-            stage.show();
+            stage.setOnHidden(event -> {
+                try {
+                    onRefreshCards();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,13 +338,52 @@ public class MainController {
     }
 
     @FXML
-    private void onRefreshCards() throws SQLException {
+    public void onRefreshCards() throws SQLException {
         cardsTable.getItems().clear();
         cardsTable.getItems().addAll(CardDAO.findAllCards());
     }
 
     @FXML
     private void onEditCard() {
+        Karte selected = cardsTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            System.out.println("Keine Karte ausgewählt!");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit_card.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            var cssUrl = getClass().getResource("/dark.css");
+            if (cssUrl != null) scene.getStylesheets().add(cssUrl.toExternalForm());
+
+            Stage stage = new Stage();
+            stage.setTitle("Karte bearbeiten");
+            stage.setScene(scene);
+            stage.setResizable(false);
+
+            EditCardController c = loader.getController();
+            c.setCard(selected);
+
+            stage.setOnHidden(ev -> {
+                if (c.isSaved()) {
+                    // hier DB Update hast du ggf. schon im Controller gemacht
+                    // dann nur refresh:
+                    try {
+                        onRefreshCards();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

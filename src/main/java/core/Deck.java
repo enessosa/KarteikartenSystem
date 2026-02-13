@@ -87,4 +87,9 @@ public class Deck {
         List<Karte> cards = CardDAO.findByDeckId(this.deckid);
         return cards.size();
     }
+
+    @Override
+    public String toString() {
+        return deckName;
+    }
 }

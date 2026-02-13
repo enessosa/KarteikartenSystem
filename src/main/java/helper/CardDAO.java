@@ -138,21 +138,21 @@ public class CardDAO {
         }
     }
 
-    public static void update(String toUpdate, int cardId, int newThing) throws SQLException {
+    public static void updateDeck(int cardId, int newId) throws SQLException {
 
         String sql = """
                 UPDATE cards
-                SET ? = ?
-                Where id = ?
+                SET deck_id = ?
+                WHERE id = ?
                 """;
 
-        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+        if (DeckDAO.getDeckName(newId) != null) {
+            try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+                ps.setInt(1, newId);
+                ps.setInt(2, cardId);
+                ps.executeUpdate();
+            }
 
-            ps.setString(1, toUpdate);
-            ps.setInt(2, newThing);
-            ps.setInt(3, cardId);
-
-            ps.executeUpdate();
         }
     }
 
