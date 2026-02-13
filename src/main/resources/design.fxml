@@ -36,7 +36,6 @@
         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-            <!-- TOP: Menu -->
             <top>
                 <MenuBar maxHeight="-Infinity" prefHeight="28.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
                     <menus>
@@ -64,7 +63,6 @@
                 </MenuBar>
             </top>
 
-            <!-- LEFT: Sidebar (Decks + Aktionen) -->
             <left>
                 <Pane prefHeight="672.0" prefWidth="320.0" BorderPane.alignment="CENTER_LEFT">
                     <children>
@@ -73,7 +71,6 @@
 
                             <panes>
 
-                                <!-- Pane 1: Decks -->
                                 <TitledPane animated="false" text="Decks">
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="260.0" prefWidth="300.0">
@@ -94,7 +91,6 @@
                                     </content>
                                 </TitledPane>
 
-                                <!-- Pane 2: Abfragen -->
                                 <TitledPane animated="false" text="Abfragen">
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="260.0" prefWidth="300.0">
@@ -104,34 +100,22 @@
                                                       AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
 
                                                     <Label text="Aktives Deck:"/>
-                                                    <Label fx:id="quizDeckLabel" text="-" />
-
-                                                    <Separator />
-
-                                                    <Button mnemonicParsing="false" text="Abfrage starten" onAction="#onStartQuiz" maxWidth="1.7976931348623157E308"/>
-                                                    <Button mnemonicParsing="false" text="Nächste Karte" onAction="#onNextCard" maxWidth="1.7976931348623157E308"/>
-                                                    <Button mnemonicParsing="false" text="Antwort aufdecken" onAction="#onRevealAnswer" maxWidth="1.7976931348623157E308"/>
-
-                                                    <Separator />
-
-                                                    <Label text="Bewertung:"/>
                                                     <HBox spacing="8.0">
-                                                        <Button mnemonicParsing="false" text="Schlecht" onAction="#onRateBad"/>
-                                                        <Button mnemonicParsing="false" text="Okay" onAction="#onRateOkay"/>
-                                                        <Button mnemonicParsing="false" text="Gut" onAction="#onRateGood"/>
+                                                        <Label text="Deck:"/>
+                                                        <ComboBox fx:id="chooseDeckForQuiz" prefWidth="300.0"/>
                                                     </HBox>
 
-                                                    <HBox spacing="10.0">
-                                                        <Label fx:id="quizProgressLabel" text="0 / 0"/>
-                                                        <ProgressBar fx:id="quizProgressBar" prefWidth="180.0" progress="0.0"/>
-                                                    </HBox>
+                                                    <Separator />
+
+                                                    <Button fx:id="quizButton" text="Abfrage starten" onAction="#onStartQuiz" maxWidth="1.7976931348623157E308"/>
+
+                                                    <Separator />
                                                 </VBox>
                                             </children>
                                         </AnchorPane>
                                     </content>
                                 </TitledPane>
 
-                                <!-- Pane 3: Karte hinzufügen -->
                                 <TitledPane animated="false" text="Karte hinzufügen">
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="310.0" prefWidth="300.0">
@@ -154,7 +138,7 @@
                                                     </HBox>
 
                                                     <HBox spacing="8.0">
-                                                        <Button mnemonicParsing="false" text="Speichern" onAction="#onAddCard"/>
+                                                        <Button fx:id="saveButton" text="Speichern" onAction="#onAddCard"/>
                                                     </HBox>
 
 
@@ -172,7 +156,6 @@
                 </Pane>
             </left>
 
-            <!-- CENTER: Verwalten / Hauptbereich -->
             <center>
                 <AnchorPane prefHeight="672.0" prefWidth="780.0" BorderPane.alignment="CENTER">
                     <children>
@@ -187,7 +170,7 @@
                                 <TextField fx:id="cardSearchField" promptText="Karten suchen…" HBox.hgrow="ALWAYS" onKeyReleased="#onCardSearch"/>
                                 <Button mnemonicParsing="false" text="Aktualisieren" onAction="#onRefreshCards"/>
                                 <Button mnemonicParsing="false" text="Bearbeiten" onAction="#onEditCard"/>
-                                <Button mnemonicParsing="false" text="Löschen" onAction="#onDeleteCard"/>
+                                <Button fx:id="deleteButton" text="Löschen" onAction="#onDeleteCard"/>
                             </HBox>
 
                             <TableView fx:id="cardsTable" prefHeight="540.0">

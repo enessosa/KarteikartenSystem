@@ -1,5 +1,8 @@
 package gui;
 
+import helper.CardDAO;
+import helper.DatabaseManager;
+import helper.DeckDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.SQLException;
 
 public class GUI extends Application {
 
@@ -45,6 +49,14 @@ public class GUI extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        try {
+            DatabaseManager.getConnection();
+
+            DeckDAO.createDeckDB();
+            CardDAO.createCardDB();
+            launch(args);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
