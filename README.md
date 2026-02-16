@@ -50,6 +50,13 @@ java -jar target/KarteikartenSystem.jar
 
 ---
 
+## Future Improvements
+
+- Spaced repetition algorithm
+- Import/Export functionality
+- Statistics dashboard
+- REST backend integration
+
 ## Why I Built This
 
 
