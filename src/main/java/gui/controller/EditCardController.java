@@ -33,12 +33,11 @@ public class EditCardController {
     }
 
     public Karte getEditedCard() {
-        return card; // falls du die Karte mit geänderten Werten zurückgeben willst
+        return card;
     }
 
     @FXML
     private void initialize() throws SQLException {
-        // Level-Enum in ComboBox
         levelBox.getItems().setAll(
                 RecognitionLevel.BAD,
                 RecognitionLevel.OK,
@@ -46,7 +45,6 @@ public class EditCardController {
                 RecognitionLevel.EXCELLENT
         );
 
-        // UI-Validation: Speichern nur wenn Texte nicht leer
         saveButton.disableProperty().bind(
                 frontArea.textProperty().isEmpty()
                         .or(backArea.textProperty().isEmpty())
@@ -54,9 +52,8 @@ public class EditCardController {
                         .or(levelBox.getSelectionModel().selectedItemProperty().isNull())
         );
 
-        // Decks laden
         try {
-            List<Deck> decks = DeckDAO.getAllDecks(); // <-- diese DAO Methode brauchst du
+            List<Deck> decks = DeckDAO.getAllDecks();
             deckBox.getItems().setAll(decks);
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,16 +69,13 @@ public class EditCardController {
         frontArea.setText(card.getVorderseite());
         backArea.setText(card.getRueckseite());
 
-        // Level vorauswählen
         levelBox.getSelectionModel().select(RecognitionLevelTranslator.toEnum(card.getLevel()));
         deckBox.getSelectionModel().select(DeckDAO.findDeck(card.getDeck()));
 
-        // Deck vorauswählen (je nach deinem Modell)
-        // Variante A: Karte hat deckId:
-        int deckId = card.getId(); // ggf. getter anpassen
+        int deckId = card.getId();
         Deck selectedDeck = null;
         for (Deck d : deckBox.getItems()) {
-            if (d.getDeckid() == deckId) { // ggf. getter anpassen
+            if (d.getDeckid() == deckId) {
                 selectedDeck = d;
                 break;
             }
@@ -93,20 +87,17 @@ public class EditCardController {
 
     @FXML
     private void onSave(javafx.event.ActionEvent event) throws SQLException {
-        // Werte aus UI lesen
+
         Deck newDeck = deckBox.getValue();
         RecognitionLevel newLevel = levelBox.getValue();
         String newFront = frontArea.getText().trim();
         String newBack = backArea.getText().trim();
 
-        // In card schreiben (damit du sie zurückgeben kannst)
         CardDAO.update("vorderseite", card.getId(), newFront);
         CardDAO.update("rueckseite", card.getId(), newBack);
         CardDAO.updateRecognitionLevel(card.getId(), newLevel);
         CardDAO.updateDeck(card.getId(), newDeck.getDeckid());
 
-        // DB Update machst du selbst (z.B. CardDAO.updateCard(card);)
-        // -> wenn Update erfolgreich:
         saved = true;
 
         close(event);

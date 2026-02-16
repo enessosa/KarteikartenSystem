@@ -24,7 +24,6 @@ public class RenameDeckController {
 
     @FXML
     private void initialize() {
-        // Button nur aktiv wenn Text nicht leer
         renameButton.disableProperty().bind(
                 nameField.textProperty().isEmpty()
         );
@@ -48,7 +47,6 @@ public class RenameDeckController {
         stage.close();
     }
 
-    // Optional: alten Namen vorausfüllen
     public void setCurrentName(String currentName) {
         nameField.setText(currentName);
         nameField.selectAll();

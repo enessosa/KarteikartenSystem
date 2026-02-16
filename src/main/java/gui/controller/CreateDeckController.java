@@ -20,7 +20,6 @@ public class CreateDeckController {
 
     @FXML
     private void initialize() {
-        // Button nur aktiv, wenn wirklich was drin steht (nicht leer)
         createButton.disableProperty().bind(deckNameField.textProperty().isEmpty());
     }
 

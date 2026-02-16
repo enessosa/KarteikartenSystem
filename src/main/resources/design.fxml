@@ -70,7 +70,7 @@
                                                     <HBox spacing="8.0">
                                                         <Button mnemonicParsing="false" text="Neu" onAction="#onCreateDeck"/>
                                                         <Button mnemonicParsing="false" text="Umbenennen" onAction="#onRenameDeck"/>
-                                                        <Button mnemonicParsing="false" text="Löschen" onAction="#onDeleteDeck"/>
+                                                        <Button fx:id="deleteDeckButton" text="Löschen" onAction="#onDeleteDeck"/>
                                                     </HBox>
                                                 </VBox>
                                             </children>

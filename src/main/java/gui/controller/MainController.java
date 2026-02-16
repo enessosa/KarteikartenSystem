@@ -17,8 +17,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
-import static javax.swing.JOptionPane.showMessageDialog;
-
 public class MainController {
 
     @FXML
@@ -60,11 +58,13 @@ public class MainController {
     @FXML
     public ComboBox chooseDeckForQuiz;
 
+    @FXML
+    public Button deleteDeckButton;
+
 
     @FXML
     public void initialize() throws SQLException, IOException {
 
-        // holt die Werte ein für die Tabelle.
         colDeck.setCellValueFactory(new PropertyValueFactory<>("deck"));
         colFront.setCellValueFactory(new PropertyValueFactory<>("vorderseite"));
         colBack.setCellValueFactory(new PropertyValueFactory<>("rueckseite"));
@@ -77,11 +77,9 @@ public class MainController {
 
         List<String> deckNames = DeckDAO.getAllDeckNames();
 
-        // holt alle decknamen für Auswahl bei Kartenerstellung
         chooseDeck.getItems().addAll(deckNames);
         chooseDeckForQuiz.getItems().addAll(deckNames);
 
-        // Button ist deaktiviert, solange nichts ausgewählt ist
         saveButton.disableProperty().bind(
                 chooseDeck.getSelectionModel().selectedItemProperty().isNull()
                         .or(newFrontArea.textProperty().isEmpty())
@@ -90,6 +88,10 @@ public class MainController {
 
         quizButton.disableProperty().bind(
                 chooseDeckForQuiz.getSelectionModel().selectedItemProperty().isNull()
+        );
+
+        deleteDeckButton.disableProperty().bind(
+                deckListView.getSelectionModel().selectedItemProperty().isNull()
         );
 
     }
@@ -380,7 +382,6 @@ public class MainController {
         try {
             int i = DeckDAO.findDeck(deckname).getDeckid();
         } catch (NullPointerException e) {
-            showMessageDialog(null, "Dieses Deck gibt es nicht.");
             return;
         }
 
