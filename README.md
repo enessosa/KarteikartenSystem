@@ -15,7 +15,7 @@ A desktop flashcard application built with Java and JavaFX, including SQLite per
 
 ## Tech Stack
 
-- Java 21
+- Java 24
 - JavaFX (FXML)
 - CSS
 - SQLite
