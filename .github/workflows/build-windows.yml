@@ -1,0 +1,33 @@
+name: Build Windows Installer
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 24
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '24'
+
+      - name: Build Fat-JAR
+        run: mvn clean package -q
+
+      - name: Build Windows Installer (.exe)
+        run: mvn jpackage:jpackage
+
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: KarteikartenSystem-Windows-Installer
+          path: target/installer/*.exe
+          retention-days: 30
