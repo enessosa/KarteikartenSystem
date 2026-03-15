@@ -42,10 +42,11 @@ jobs:
             --main-jar KarteikartenSystem-fat.jar `
             --main-class gui.Launcher `
             --dest target/installer `
-            --module-path "$env:JAVAFX_JMODS" `
+            --module-path "$env:JAVA_HOME\jmods;$env:JAVAFX_JMODS" `
             --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base,javafx.media `
             --java-options "--enable-native-access=ALL-UNNAMED" `
             --java-options "--add-modules=javafx.controls,javafx.fxml" `
+            --win-console `
             --win-dir-chooser `
             --win-shortcut `
             --win-menu `
