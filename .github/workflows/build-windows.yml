@@ -31,7 +31,25 @@ jobs:
           echo "JAVAFX_JMODS=$env:RUNNER_TEMP\javafx\javafx-jmods-24.0.2" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Build Windows Installer (.exe)
-        run: mvn org.panteleyev:jpackage-maven-plugin:jpackage
+        shell: pwsh
+        run: |
+          jpackage `
+            --type EXE `
+            --name KarteikartenSystem `
+            --app-version 1.0 `
+            --vendor KarteikartenSystem `
+            --input target `
+            --main-jar KarteikartenSystem-fat.jar `
+            --main-class gui.Launcher `
+            --dest target/installer `
+            --module-path "$env:JAVAFX_JMODS" `
+            --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base,javafx.media `
+            --java-options "--enable-native-access=ALL-UNNAMED" `
+            --java-options "--add-modules=javafx.controls,javafx.fxml" `
+            --win-dir-chooser `
+            --win-shortcut `
+            --win-menu `
+            --win-menu-group KarteikartenSystem
 
       - name: Upload Installer
         uses: actions/upload-artifact@v4
