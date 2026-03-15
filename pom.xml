@@ -86,6 +86,16 @@
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.openjfx:javafx-controls</exclude>
+                                    <exclude>org.openjfx:javafx-fxml</exclude>
+                                    <exclude>org.openjfx:javafx-graphics</exclude>
+                                    <exclude>org.openjfx:javafx-base</exclude>
+                                    <exclude>org.openjfx:javafx-media</exclude>
+                                    <exclude>org.openjfx:javafx-web</exclude>
+                                </excludes>
+                            </artifactSet>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -114,8 +124,19 @@
                     <mainJar>${project.artifactId}-fat.jar</mainJar>
                     <mainClass>gui.Launcher</mainClass>
                     <destination>${project.build.directory}/installer</destination>
+                    <modulePaths>
+                        <modulePath>${env.JAVAFX_JMODS}</modulePath>
+                    </modulePaths>
+                    <addModules>
+                        <addModule>javafx.controls</addModule>
+                        <addModule>javafx.fxml</addModule>
+                        <addModule>javafx.graphics</addModule>
+                        <addModule>javafx.base</addModule>
+                        <addModule>javafx.media</addModule>
+                    </addModules>
                     <javaOptions>
                         <javaOption>--enable-native-access=ALL-UNNAMED</javaOption>
+                        <javaOption>--add-modules=javafx.controls,javafx.fxml</javaOption>
                     </javaOptions>
                     <type>EXE</type>
                     <winDirChooser>true</winDirChooser>

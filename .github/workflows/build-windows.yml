@@ -22,6 +22,14 @@ jobs:
       - name: Build Fat-JAR
         run: mvn clean package -q
 
+      - name: Download JavaFX jmods for Windows
+        shell: pwsh
+        run: |
+          $url = "https://download2.gluonhq.com/openjfx/24.0.2/openjfx-24.0.2_windows-x64_bin-jmods.zip"
+          Invoke-WebRequest -Uri $url -OutFile "$env:RUNNER_TEMP\javafx-jmods.zip"
+          Expand-Archive "$env:RUNNER_TEMP\javafx-jmods.zip" -DestinationPath "$env:RUNNER_TEMP\javafx"
+          echo "JAVAFX_JMODS=$env:RUNNER_TEMP\javafx\javafx-jmods-24.0.2" | Out-File -FilePath $env:GITHUB_ENV -Append
+
       - name: Build Windows Installer (.exe)
         run: mvn org.panteleyev:jpackage-maven-plugin:jpackage
 
