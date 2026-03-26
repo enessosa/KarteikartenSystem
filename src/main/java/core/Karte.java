@@ -46,6 +46,11 @@ public class Karte {
         return RecognitionLevelTranslator.toString(level);
     }
 
+    /**
+     * getter.
+     * @return the deck
+     * @throws SQLException exception
+     */
     public String getDeck() throws SQLException {
         return DeckDAO.getDeckName(deckid);
     }
