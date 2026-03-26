@@ -25,6 +25,8 @@ public class QuizController {
     private List<Karte> cards;
     private int index = 0;
     private boolean showingBack = false;
+    private int totalCards = 0;
+    private int finishedCards = 0;
 
     @FXML
     private Label deckTitleLabel;
@@ -62,6 +64,8 @@ public class QuizController {
         this.cards = sortCards(CardDAO.findByDeckId(deck.getDeckid()));
         this.index = 0;
         this.showingBack = false;
+        this.totalCards = this.cards.size();
+        this.finishedCards = 0;
 
         if (cards == null || cards.isEmpty()) {
             sideLabel.setText("Info");
@@ -115,7 +119,7 @@ public class QuizController {
             closeButton.setVisible(true);
             closeButton.setLayoutX(0);
             progressBar.setProgress(1.0);
-            infoLabel.setText(cards.size() + " / " + cards.size());
+            infoLabel.setText(totalCards + " / " + totalCards);
             progressTextLabel.setText("0 übrig");
             return;
         }
@@ -124,14 +128,12 @@ public class QuizController {
     }
 
     private void updateProgress() {
-        int total = cards.size();
-        int current = index + 1;
-        int remaining = total - index;
+        int remaining = totalCards - finishedCards;
 
-        infoLabel.setText(current + " / " + total);
+        infoLabel.setText(finishedCards + " / " + totalCards);
         progressTextLabel.setText(remaining + " übrig");
 
-        progressBar.setProgress((double) index / total);
+        progressBar.setProgress((double) finishedCards / totalCards);
     }
 
     @FXML
@@ -164,8 +166,21 @@ public class QuizController {
         if (cards == null || cards.isEmpty()) return;
 
         Karte k = currentCard();
-
         CardDAO.updateRecognitionLevel(k.getId(), level);
+
+        if (level == RecognitionLevel.BAD) {
+            // Karte taucht nach 2 Karten wieder auf
+            int insertAt = Math.min(index + 2, cards.size());
+            cards.add(insertAt, k);
+        } else if (level == RecognitionLevel.OK) {
+            // Karte taucht in der zweiten Hälfte der verbleibenden Karten wieder auf
+            int remaining = cards.size() - index - 1;
+            int insertAt = index + 1 + Math.max(1, remaining / 2);
+            cards.add(Math.min(insertAt, cards.size()), k);
+        } else {
+            // GOOD oder EXCELLENT: Karte ist erledigt
+            finishedCards++;
+        }
 
         nextCard();
     }

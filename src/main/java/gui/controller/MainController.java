@@ -5,13 +5,16 @@ import core.Karte;
 import core.enums.RecognitionLevel;
 import helper.DAO.CardDAO;
 import helper.DAO.DeckDAO;
+import helper.TxtImporter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -376,6 +379,74 @@ public class MainController {
         List<String> deckNames = DeckDAO.getAllDeckNames();
         box.getItems().addAll(deckNames);
 
+    }
+
+    @FXML
+    private void onImportTxt() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("TXT-Datei importieren");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Textdateien (*.txt)", "*.txt")
+        );
+
+        File file = fileChooser.showOpenDialog(cardsTable.getScene().getWindow());
+        if (file == null) return;
+
+        try {
+            TxtImporter.ImportErgebnis ergebnis = TxtImporter.parse(file);
+
+            String deckname = ergebnis.deckName();
+            if (deckname == null || deckname.isEmpty()) {
+                Alert error = darkAlert(Alert.AlertType.ERROR);
+                error.setTitle("Kein Deck angegeben");
+                error.setHeaderText(null);
+                error.setContentText("Die Datei enthält keine #deck:-Zeile.");
+                error.showAndWait();
+                return;
+            }
+
+            // Deck anlegen falls es noch nicht existiert
+            try {
+                DeckDAO.findDeck(deckname);
+            } catch (Exception e) {
+                DeckDAO.insert(deckname);
+                deckListView.getItems().clear();
+                prepareDeckListView();
+                refreshDeckChoice(chooseDeck);
+                refreshDeckChoice(chooseDeckForQuiz);
+            }
+
+            for (TxtImporter.KartenPaar paar : ergebnis.paare()) {
+                erstelleKarte(paar.vorderseite(), paar.rueckseite(), deckname);
+            }
+
+            onRefreshCards();
+
+            String meldung = ergebnis.paare().size() + " Karte(n) in Deck \"" + deckname + "\" importiert.";
+            if (ergebnis.uebersprungen() > 0) {
+                meldung += "\n" + ergebnis.uebersprungen() + " Zeile(n) übersprungen (falsches Format).";
+            }
+
+            Alert info = darkAlert(Alert.AlertType.INFORMATION);
+            info.setTitle("Import abgeschlossen");
+            info.setHeaderText(null);
+            info.setContentText(meldung);
+            info.showAndWait();
+
+        } catch (Exception e) {
+            Alert error = darkAlert(Alert.AlertType.ERROR);
+            error.setTitle("Fehler beim Import");
+            error.setHeaderText(null);
+            error.setContentText("Die Datei konnte nicht gelesen werden:\n" + e.getMessage());
+            error.showAndWait();
+        }
+    }
+
+    private Alert darkAlert(Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        String css = getClass().getResource("/dark.css").toExternalForm();
+        alert.getDialogPane().getStylesheets().add(css);
+        return alert;
     }
 
     public static void erstelleKarte(String vorderseite, String rueckseite, String deckname) throws SQLException {
