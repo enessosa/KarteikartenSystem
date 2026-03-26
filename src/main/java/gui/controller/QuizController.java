@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import core.Deck;
 import core.Karte;
 import helper.RecognitionLevelTranslator;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import helper.DAO.CardDAO;
@@ -27,6 +27,7 @@ public class QuizController {
     private boolean showingBack = false;
     private int totalCards = 0;
     private int finishedCards = 0;
+    private Stage quizStage;
 
     @FXML
     private Label deckTitleLabel;
@@ -59,6 +60,14 @@ public class QuizController {
     /**
      * Wird von MainController aufgerufen, nachdem das Fenster geladen ist.
      */
+    public void setStage(Stage stage) {
+        this.quizStage = stage;
+        stage.setOnCloseRequest(event -> {
+            event.consume(); // Standard-Schließen abfangen
+            closeQuiz();
+        });
+    }
+
     public void startQuizForDeck(Deck deck) throws SQLException {
         this.deck = deck;
         this.cards = sortCards(CardDAO.findByDeckId(deck.getDeckid()));
@@ -187,8 +196,21 @@ public class QuizController {
 
     @FXML
     private void onClose(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
+        closeQuiz();
+    }
+
+    private void closeQuiz() {
+        if (quizStage == null) return;
+
+        if (quizStage.isFullScreen()) {
+            // Fullscreen-Exit abwarten, dann erst schließen (macOS-Animation ist asynchron)
+            quizStage.fullScreenProperty().addListener((obs, wasFullScreen, isNowFullScreen) -> {
+                if (!isNowFullScreen) Platform.runLater(quizStage::close);
+            });
+            quizStage.setFullScreen(false);
+        } else {
+            quizStage.close();
+        }
     }
 
     public List<Karte> sortCards(List<Karte> cards) {

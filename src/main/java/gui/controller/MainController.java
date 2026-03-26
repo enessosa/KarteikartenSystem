@@ -284,6 +284,7 @@ public class MainController {
             stage.setScene(scene);
 
             QuizController quizController = loader.getController();
+            quizController.setStage(stage);
             quizController.startQuizForDeck(deck);
 
             stage.setOnHidden(event -> {
